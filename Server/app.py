@@ -11,23 +11,22 @@ from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
 
-# 以下密钥信息从控制台获取
-Appid = ""  # 填写控制台中获取的 APPID 信息
-APISecret = ""  # 填写控制台中获取的 APISecret 信息
-APIKey = ""  # 填写控制台中获取的 APIKey 信息
+app = Flask(__name__)
+
+# 从环境变量中获取密钥信息
+Appid = os.environ.get('APPID')
+APISecret = os.environ.get('APISecret')
+APIKey = os.environ.get('APIKey')
 
 # 用于配置大模型版本，默认“general/generalv2”
-domain = "generalv3"   # v1.5版本
-# domain = "generalv2"    # v2.0版本
+domain = "generalv3"   # v1.5 版本
+# domain = "generalv2"    # v2.0 版本
 # 云端环境的服务地址
-Spark_url = "ws://spark-api.xf-yun.com/v3.1/chat"  # v1.5环境的地址
-# Spark_url = "ws://spark-api.xf-yun.com/v2.1/chat"  # v2.0环境的地址
+Spark_url = "ws://spark-api.xf-yun.com/v3.1/chat"  # v1.5 环境的地址
+# Spark_url = "ws://spark-api.xf-yun.com/v2.1/chat"  # v2.0 环境的地址
 Spark_url1 = "ws://ws-api.xfyun.cn/v2/iat"  # 语音听写
 Spark_url2 = "ws://ws-api.xfyun.cn/v2/tts"  # 语音合成
 Spark_url3 = "ws://tts-api.xfyun.cn/v2/tts"
-
-
-app = Flask(__name__)
 
 
 @app.route('/whf', methods=['GET'])
@@ -41,7 +40,7 @@ def handle_request():
     signature_origin = "host: " + host + "\n"
     signature_origin += "date: " + date + "\n"
     signature_origin += "GET " + path + " HTTP/1.1"
-    # 进行hmac-sha256进行加密
+    # 进行 hmac-sha256 进行加密
     signature_sha = hmac.new(APISecret.encode('utf-8'), signature_origin.encode('utf-8'),
                              digestmod=hashlib.sha256).digest()
     signature_sha_base64 = base64.b64encode(
@@ -55,7 +54,7 @@ def handle_request():
         "date": date,
         "host": host
     }
-    # 拼接鉴权参数，生成url
+    # 拼接鉴权参数，生成 url
     url = Spark_url + '?' + urlencode(v)
     return url  # 返回一个简单的消息示例
 
@@ -71,7 +70,7 @@ def handle_request1():
     signature_origin = "host: " + host + "\n"
     signature_origin += "date: " + date + "\n"
     signature_origin += "GET " + path + " HTTP/1.1"
-    # 进行hmac-sha256进行加密
+    # 进行 hmac-sha256 进行加密
     signature_sha = hmac.new(APISecret.encode('utf-8'), signature_origin.encode('utf-8'),
                              digestmod=hashlib.sha256).digest()
     signature_sha_base64 = base64.b64encode(
@@ -85,7 +84,7 @@ def handle_request1():
         "date": date,
         "host": host
     }
-    # 拼接鉴权参数，生成url
+    # 拼接鉴权参数，生成 url
     url = Spark_url1 + '?' + urlencode(v)
     return url  # 返回一个简单的消息示例
 
@@ -101,7 +100,7 @@ def handle_request2():
     signature_origin = "host: " + host + "\n"
     signature_origin += "date: " + date + "\n"
     signature_origin += "GET " + path + " HTTP/1.1"
-    # 进行hmac-sha256进行加密
+    # 进行 hmac-sha256 进行加密
     signature_sha = hmac.new(APISecret.encode('utf-8'), signature_origin.encode('utf-8'),
                              digestmod=hashlib.sha256).digest()
     signature_sha_base64 = base64.b64encode(
@@ -115,7 +114,7 @@ def handle_request2():
         "date": date,
         "host": host
     }
-    # 拼接鉴权参数，生成url
+    # 拼接鉴权参数，生成 url
     url = Spark_url3 + '?' + urlencode(v)
     return url  # 返回一个简单的消息示例
 
